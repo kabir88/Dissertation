@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,9 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from data_handler import load_player_data, load_team_data
 
-port = int(os.environ.get("PORT", 8501)) 
-st.run(port=port, address="0.0.0.0")
-
+# Set page configuration
 st.set_page_config(
     page_title="NBA Strategy Optimization",
     page_icon="🏀",
@@ -99,74 +96,173 @@ if not players_df.empty:
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="stat-title">Top Scorer</div>
-                <div class="stat-value">{players_df.nlargest(1, 'PTS').iloc[0]['PLAYER_NAME']}</div>
-                <div class="stat-title">{players_df.nlargest(1, 'PTS').iloc[0]['PTS']:.1f} PPG</div>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        # Add error handling
+        if not players_df.empty:
+            top_scorer = players_df.nlargest(1, 'PTS')
+            if not top_scorer.empty:
+                st.markdown(
+                    f"""
+                    <div class="card">
+                        <div class="stat-title">Top Scorer</div>
+                        <div class="stat-value">{top_scorer.iloc[0]['PLAYER_NAME']}</div>
+                        <div class="stat-title">{top_scorer.iloc[0]['PTS']:.1f} PPG</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    """
+                    <div class="card">
+                        <div class="stat-title">Top Scorer</div>
+                        <div class="stat-value">N/A</div>
+                        <div class="stat-title">No data available</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                """
+                <div class="card">
+                    <div class="stat-title">Top Scorer</div>
+                    <div class="stat-value">N/A</div>
+                    <div class="stat-title">No data available</div>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
     
     with col2:
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="stat-title">Top Rebounder</div>
-                <div class="stat-value">{players_df.nlargest(1, 'REB').iloc[0]['PLAYER_NAME']}</div>
-                <div class="stat-title">{players_df.nlargest(1, 'REB').iloc[0]['REB']:.1f} RPG</div>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        # Add error handling
+        if not players_df.empty:
+            top_rebounder = players_df.nlargest(1, 'REB')
+            if not top_rebounder.empty:
+                st.markdown(
+                    f"""
+                    <div class="card">
+                        <div class="stat-title">Top Rebounder</div>
+                        <div class="stat-value">{top_rebounder.iloc[0]['PLAYER_NAME']}</div>
+                        <div class="stat-title">{top_rebounder.iloc[0]['REB']:.1f} RPG</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    """
+                    <div class="card">
+                        <div class="stat-title">Top Rebounder</div>
+                        <div class="stat-value">N/A</div>
+                        <div class="stat-title">No data available</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                """
+                <div class="card">
+                    <div class="stat-title">Top Rebounder</div>
+                    <div class="stat-value">N/A</div>
+                    <div class="stat-title">No data available</div>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
     
     with col3:
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="stat-title">Top Assists</div>
-                <div class="stat-value">{players_df.nlargest(1, 'AST').iloc[0]['PLAYER_NAME']}</div>
-                <div class="stat-title">{players_df.nlargest(1, 'AST').iloc[0]['AST']:.1f} APG</div>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        # Add error handling
+        if not players_df.empty:
+            top_assists = players_df.nlargest(1, 'AST')
+            if not top_assists.empty:
+                st.markdown(
+                    f"""
+                    <div class="card">
+                        <div class="stat-title">Top Assists</div>
+                        <div class="stat-value">{top_assists.iloc[0]['PLAYER_NAME']}</div>
+                        <div class="stat-title">{top_assists.iloc[0]['AST']:.1f} APG</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+            else:
+                st.markdown(
+                    """
+                    <div class="card">
+                        <div class="stat-title">Top Assists</div>
+                        <div class="stat-value">N/A</div>
+                        <div class="stat-title">No data available</div>
+                    </div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+        else:
+            st.markdown(
+                """
+                <div class="card">
+                    <div class="stat-title">Top Assists</div>
+                    <div class="stat-value">N/A</div>
+                    <div class="stat-title">No data available</div>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
     
     with col4:
-        st.markdown(
-            f"""
-            <div class="card">
-                <div class="stat-title">Most Efficient</div>
-                <div class="stat-value">{players_df[players_df['FGA'] > 500].nlargest(1, 'FG_PCT').iloc[0]['PLAYER_NAME']}</div>
-                <div class="stat-title">{players_df[players_df['FGA'] > 500].nlargest(1, 'FG_PCT').iloc[0]['FG_PCT']*100:.1f}% FG</div>
-            </div>
-            """, 
-            unsafe_allow_html=True
-        )
+        # Add error handling for empty results
+        efficient_players = players_df[players_df['FGA'] > 100]  # Lower threshold to ensure we get results
+        if not efficient_players.empty:
+            most_efficient = efficient_players.nlargest(1, 'FG_PCT').iloc[0]
+            st.markdown(
+                f"""
+                <div class="card">
+                    <div class="stat-title">Most Efficient</div>
+                    <div class="stat-value">{most_efficient['PLAYER_NAME']}</div>
+                    <div class="stat-title">{most_efficient['FG_PCT']*100:.1f}% FG</div>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
+        else:
+            st.markdown(
+                """
+                <div class="card">
+                    <div class="stat-title">Most Efficient</div>
+                    <div class="stat-value">N/A</div>
+                    <div class="stat-title">No qualifying players</div>
+                </div>
+                """, 
+                unsafe_allow_html=True
+            )
     
     # Show a league overview visualization
     st.subheader("League Overview")
     tab1, tab2 = st.tabs(["Scoring Distribution", "Team Comparison"])
     
     with tab1:
-        # Create a histogram of scoring distribution
-        fig = px.histogram(
-            players_df[players_df['MIN'] > 15],  # Filter for players with significant minutes
-            x='PTS',
-            nbins=20,
-            title='Scoring Distribution Among NBA Players',
-            labels={'PTS': 'Points Per Game', 'count': 'Number of Players'},
-            color_discrete_sequence=['#17408B']
-        )
+        # Add error handling for the histogram
+        filtered_players = players_df[players_df['MIN'] > 15] if not players_df.empty else pd.DataFrame()
         
-        fig.update_layout(
-            xaxis_title='Points Per Game',
-            yaxis_title='Number of Players'
-        )
-        
-        st.plotly_chart(fig, use_container_width=True)
+        if not filtered_players.empty:
+            # Create a histogram of scoring distribution
+            fig = px.histogram(
+                filtered_players,
+                x='PTS',
+                nbins=20,
+                title='Scoring Distribution Among NBA Players',
+                labels={'PTS': 'Points Per Game', 'count': 'Number of Players'},
+                color_discrete_sequence=['#17408B']
+            )
+            
+            fig.update_layout(
+                xaxis_title='Points Per Game',
+                yaxis_title='Number of Players'
+            )
+            
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.info("Not enough player data to display scoring distribution.")
     
     with tab2:
         if not teams_df.empty:
