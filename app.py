@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -5,6 +6,9 @@ import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 from data_handler import load_player_data, load_team_data
+
+port = int(os.environ.get("PORT", 8501)) 
+st.run(port=port, address="0.0.0.0")
 
 st.set_page_config(
     page_title="NBA Strategy Optimization",
